@@ -1,2 +1,0 @@
-- CAL and efficient Frontier with ETFs and Commodities
-- Rolling portfolio Analysis (Coletti)
