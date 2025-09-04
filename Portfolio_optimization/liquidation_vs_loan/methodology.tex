@@ -1,0 +1,97 @@
+\documentclass[a4paper, 11pt]{article}
+
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{geometry}
+\usepackage{graphicx}
+\usepackage{hyperref}
+
+\geometry{a4paper, margin=1in}
+
+\title{\textbf{Loan vs. Liquidation: A Financial Analysis Methodology}}
+\author{Alberto Monaco}
+\date{\today}
+
+\begin{document}
+	
+	\maketitle
+	
+	\begin{abstract}
+		This document outlines the mathematical framework and methodology used in the Python script liquidation vs loan.py. The objective is to provide a formal comparison between two financial strategies for raising capital from an existing investment portfolio: securing a loan against the assets versus liquidating a portion of them. The analysis determines which strategy yields a higher net worth over a calculated time horizon, based on a set of user-defined financial parameters.
+	\end{abstract}
+	
+	\section{Introduction}
+	An investor often faces the dilemma of needing liquidity for a significant expense, such as a mortgage down payment, while having capital invested in the market. This analysis models two common approaches to solve this problem. The core of the methodology is a fair comparison of the final net worth ($P_{final}$) resulting from each strategy over an identical time horizon.
+	
+	\section{Methodology}
+	
+	\subsection{Common Variables and Definitions}
+	The model is based on the following input variables:
+	\begin{description}
+		\item[$L$]: The net liquidity required by the investor (e.g., the loan needed).
+		\item[$P$]: The constant monthly investment amount (PAC). This is also assumed to be the monthly repayment amount for the loan.
+		\item[$n_{pre}$]: The number of months the initial PAC has been active before the liquidity event.
+		\item[$r$]: The expected annual rate of return of the investment portfolio.
+		\item[$i$]: The nominal annual interest rate of the secured loan.
+		\item[$\tau$]: The capital gains tax rate (e.g., 26\% or 0.26).
+	\end{description}
+	
+	\subsection{Time Horizon for Comparison}
+	To ensure a fair comparison, the analysis horizon ($n_{repay}$) is defined as the number of months required to fully repay the loan of amount $L$ with monthly payments of $P$ at an annual interest rate $i$. This is calculated using the standard NPER formula:
+	\begin{equation}
+		n_{repay} = -\frac{\ln\left(1 - \frac{L \cdot (i/12)}{P}\right)}{\ln(1 + i/12)}
+	\end{equation}
+	
+	\subsection{Initial Capital Calculation}
+	The starting point for both scenarios is the value of the portfolio at the moment the liquidity is needed ($C_0$). This is the future value of a systematic investment plan (annuity due), where payments are made at the beginning of each period.
+	\begin{equation}
+		g_m = (1 + r)^{1/12} \quad \text{(monthly growth factor)}
+	\end{equation}
+	\begin{equation}
+		C_0 = P \cdot \sum_{i=1}^{n_{pre}} g_m^i = P \cdot \frac{g_m^{n_{pre}+1} - g_m}{g_m - 1}
+	\end{equation}
+	
+	\subsection{Scenario A: The Loan (Leverage) Strategy}
+	In this scenario, the portfolio is left untouched to grow, while a loan is taken out and repaid over $n_{repay}$ months. The final net worth ($P_{final, A}$) is the future value of the initial capital $C_0$ after this period.
+	\begin{equation}
+		P_{final, A} = C_0 \cdot (g_m)^{n_{repay}}
+	\end{equation}
+	
+	\subsection{Scenario B: The Liquidation Strategy}
+	In this scenario, a portion of the portfolio is sold to obtain the net liquidity $L$. The remaining capital is left to grow, and the monthly amount $P$ is reinvested into the portfolio.
+	
+	\subsubsection{Calculating the Gross Withdrawal Amount}
+	To obtain a net amount $L$, the investor must sell a gross amount $V$ that also covers the capital gains tax. The tax is only on the gain portion of the sale.
+	\begin{gather}
+		\text{Cost Basis} = n_{pre} \cdot P \\
+		\text{Gain Ratio} = 1 - \frac{\text{Cost Basis}}{C_0} \\
+		\text{Effective Tax Rate on Sale (\( \tau_{eff} \))} = \text{Gain Ratio} \times \tau \\
+		V = \frac{L}{1 - \tau_{eff}}
+	\end{gather}
+	
+	\subsubsection{Calculating Final Net Worth}
+	The final net worth ($P_{final, B}$) is the sum of two components:
+	\begin{enumerate}
+		\item The future value of the residual capital after liquidation.
+		\item The future value of the new PAC, funded with the monthly amount $P$ for $n_{repay}$ months.
+	\end{enumerate}
+	\begin{equation}
+		C_{residual} = C_0 - V
+	\end{equation}
+	\begin{equation}
+		P_{final, B} = (C_{residual} \cdot g_m^{n_{repay}}) + \left( P \cdot \frac{g_m^{n_{repay}+1} - g_m}{g_m - 1} \right)
+	\end{equation}
+	
+	\subsection{The Comparison Metric}
+	The script visualizes the difference in final net worth between the two strategies, $\Delta P$:
+	\begin{equation}
+		\Delta P = P_{final, A} - P_{final, B}
+	\end{equation}
+	A positive $\Delta P$ indicates that the Loan strategy is superior, while a negative value indicates that Liquidation is the better choice.
+	
+	\section{Results and Interpretation}
+	The script generates three interactive plots to visualize $\Delta P$ across different parameter spaces. These plots allow the user to identify break-even points and understand the sensitivity of the outcome to changes in market conditions (portfolio return $r$), financing costs (loan rate $i$), and personal savings capacity (PAC amount $P$). The results demonstrate that the optimal strategy is not absolute but is highly dependent on the interplay between these key financial variables.
+	
+\end{document}
