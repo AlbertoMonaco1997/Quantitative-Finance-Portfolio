@@ -8,7 +8,7 @@ My goal is to continuously deepen my expertise in **Asset, Portfolio, and Invest
 
 My approach is to start with a practical question (e.g., *"Under what conditions is it better to take a loan against a portfolio versus liquidating assets?"*) and then build a robust, code-based solution from the ground up.
 
-My focus is on building a library of reusable, efficient tools tu ensure a deep, practical understanding of financial theory and solve tangible challenges in:
+My focus is on building a library of reusable, efficient tools to ensure a deep, practical understanding of financial theory and solve tangible challenges in:
 
 * **Modern Portfolio Theory (MPT)** and Asset Allocation
 * **Risk Management** 
