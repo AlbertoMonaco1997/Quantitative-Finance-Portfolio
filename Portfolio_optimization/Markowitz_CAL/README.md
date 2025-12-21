@@ -1,7 +1,5 @@
 # Portfolio Optimization Project
 
-This project is part of a long-term study plan to acquire practical and theoretical skills for roles such as Portfolio Analyst, Risk Analyst, or Quantitative Analyst in the finance and energy sectors.
-
 The main goal is to implement key concepts from Modern Portfolio Theory (MPT), including portfolio construction, risk/return tradeoffs, and optimization under constraints.
 
 ## Contents
@@ -31,7 +29,7 @@ Here is the list:
     '000001.SS',    # SSE Composite Index (Cina)
     
     # ---Other Indexes ---
-    '^FCHI',        # **CAC 40 (Francr)
+    '^FCHI',        # **CAC 40 (France)
     '^AORD',        # **All Ordinaries (Australia)
     # ---Emerging Markets---
     '^JKSE',        # **Jakarta Composite Index (Indonesia)
@@ -54,7 +52,3 @@ Ongoing — the project is evolving alongside the theoretical study of Chapters 
 - Pandas
 - Matplotlib / Plotly
 - yfinance
-
-## Author
-
-This project is part of a portfolio designed to demonstrate technical and analytical skills to potential employers.

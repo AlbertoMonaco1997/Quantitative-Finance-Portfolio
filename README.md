@@ -1,19 +1,17 @@
-# Hi there, I'm Alberto Monaco 👋
+# Hi, I'm Alberto Monaco
 
-I am a **Quantitative Analyst** based in Italy, currently working at Intesa Sanpaolo. With a Master's degree in Mathematics and a specialization in Finance, I am passionate about the intersection of mathematical rigor, financial markets, and technology.
+I am a **Quantitative Analyst** currently working at Intesa Sanpaolo. Working to become a **'Quantamental' Portfolio Manager**.
 
-My goal is to continuously deepen my expertise in **Asset, Portfolio, and Risk Management**. This GitHub profile serves as a living portfolio of my self-directed learning journey and the practical tools I build along the way.
+My goal is to continuously deepen my expertise in **Asset, Portfolio, and Investment Management**. This GitHub profile serves as a living portfolio of my self-directed learning journey along with the pursue of CFA certfication.
 
 ---
 
-## My Learning Philosophy
+My approach is to start with a practical question (e.g., *"Under what conditions is it better to take a loan against a portfolio versus liquidating assets?"*) and then build a robust, code-based solution from the ground up.
 
-I believe the most effective way to master quantitative finance is by tackling real-world problems. My approach is not to follow tutorials, but to start with a practical question (e.g., *"Under what conditions is it better to take a loan against a portfolio versus liquidating assets?"*) and then build a robust, code-based solution from the ground up.
-
-This **problem-driven methodology** ensures a deep, practical understanding of financial theory and its application. My focus is on building a library of reusable, efficient tools that solve tangible challenges in:
+My focus is on building a library of reusable, efficient tools tu ensure a deep, practical understanding of financial theory and solve tangible challenges in:
 
 * **Modern Portfolio Theory (MPT)** and Asset Allocation
-* **Risk Management** (VaR, CVaR, stress-testing)
+* **Risk Management** 
 * **Financial Modeling** and Strategy Backtesting
 
 ---
@@ -21,25 +19,24 @@ This **problem-driven methodology** ensures a deep, practical understanding of f
 ## My Tech Stack & Toolkit
 
 * **Languages:** Python, SQL, VBA, C
-* **Core Python Libraries:** Pandas, NumPy, SciPy, Plotly, Matplotlib, Scikit-learn
-* **Tools & Platforms:** Git, GitHub, Excel
+* **Core Python Libraries:** Pandas, NumPy, SciPy, Plotly, Matplotlib, Statsmodels, Scikit-learn, Joblib
+* **Tools & Platforms:** Git, GitHub, Excel, LaTex
 
 ---
 
 ## Featured Projects
 
-Here are a few highlights from my portfolio. Each repository includes a detailed README explaining the methodology and results.
-
 | Project                                                      | Description                                                                                                                              | Technologies        |
 | ------------------------------------------------------------ | ---------------------------------------------------------------------------------------------------------------------------------------- | ------------------- |
+| **Rotational Portfolio Strategy** | Implementation of a core-satellite signal based strategy with automated report and deep statistical analysis via PIR and BRC | `Python`, `Pandas`, `NumPy`, `Joblib`, `Scipy` |
 | **Financial Strategy Analyzer (Loan vs. Liquidation)** | A Python tool that models and visualizes the financial trade-offs between leveraging and liquidating an investment portfolio for a major expense. | `Python`, `NumPy`, `Plotly` |
 | **Portfolio Optimizer & Efficient Frontier** | Implementation of Markowitz's Modern Portfolio Theory using Monte Carlo simulation to find optimal asset allocations and visualize the Efficient Frontier. | `Python`, `Pandas`, `NumPy` |
-| **Automated UCITS Pre-Compliance Check** | A script that automatically validates portfolio exposures against UCITS concentration rules (5/10/40) using data extracted via SQL.          | `Python`, `SQL`, `Pandas` |
+
 
 ---
 
 ## How to Reach Me
 
-I'm always open to connecting with fellow professionals and discussing new ideas.
+I'm always open to connecting and discussing new ideas.
 
 * **LinkedIn:** www.linkedin.com/in/alberto-monaco-180280262 * **Email:** albertomonaco1997@gmail.com

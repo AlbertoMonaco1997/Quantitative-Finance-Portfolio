@@ -10,14 +10,10 @@
 - [x] Calculate Sharpe ratios and identify optimal portfolios
 - [x] Add README and documentation
 
-## In Progress
+## Planned
 
 - [ ] Include inflation-adjusted (real) returns
 - [ ] Refactor notebook structure for clarity
-- [ ] Link each analysis step to the relevant textbook chapters
-
-## Planned (after Chapter 6)
-
 - [ ] Include Value at Risk (VaR) and Conditional VaR (CVaR)
 - [ ] Introduce downside risk metrics (Sortino, Omega ratio)
 - [ ] Add allocation constraints (e.g. sector caps, max exposure)

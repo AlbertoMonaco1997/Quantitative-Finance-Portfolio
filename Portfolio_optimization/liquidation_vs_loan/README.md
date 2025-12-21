@@ -1,8 +1,4 @@
-Of course. Here is the original text in English, formatted in Markdown.
-
------
-
-# Loan vs. Liquidation: A Financial Strategy Analyzer 📈
+# Loan vs. Liquidation: A Financial Strategy Analyzer 
 
 This project provides a Python-based tool to analyze and compare two common financial strategies for raising a significant amount of cash (e.g., for a mortgage down payment) when you have an existing investment portfolio.
 
@@ -11,11 +7,11 @@ The two strategies are:
   * **Loan (Leverage Strategy)**: Keep the entire portfolio invested and take out a loan secured by your assets. This allows the portfolio to continue growing but incurs interest costs.
   * **Liquidation Strategy**: Sell a portion of the portfolio to get the required cash. This avoids debt but incurs immediate capital gains taxes and reduces the capital base for future growth.
 
-The script uses `plotly` to generate interactive 2D and 3D visualizations, helping users understand under which conditions (portfolio return, loan interest rate, monthly savings rate) one strategy outperforms the other.
+The script uses interactive 2D and 3D visualizations, helping users understand under which conditions (portfolio return, loan interest rate, monthly savings rate) one strategy outperforms the other.
 
 -----
 
-## How It Works ⚙️
+## How It Works
 
 The core of the analysis is to compare the final net worth of an investor at the end of a specific time horizon: the number of months required to pay off the loan in the "Loan" scenario.
 
@@ -45,7 +41,7 @@ This plot shows how the final wealth difference changes when varying the monthly
 
 -----
 
-## How to Use 🛠️
+## How to Use
 
 1.  **Configure Parameters**: Open the `liquidation_vs_loan.py` script and modify the parameters in the `if __name__ == "__main__":` block to match your personal financial scenario.
 2.  You can find the results in the "plots" folder.

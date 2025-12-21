@@ -1,0 +1,18 @@
+# Core Data Analysis
+pandas>=2.2.0
+numpy>=1.24.0
+
+# Data Acquisition & IO
+pandas-datareader>=0.10.0
+openpyxl>=3.1.0
+
+# Statistics & Econometrics
+scipy>=1.10.0
+statsmodels>=0.14.0
+
+# Visualization
+matplotlib>=3.7.0
+seaborn>=0.12.0
+
+# Parallel Computing
+joblib>=1.3.0

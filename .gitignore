@@ -205,3 +205,4 @@ cython_debug/
 marimo/_static/
 marimo/_lsp/
 __marimo__/
+/Portfolio_optimization/loan_vs_liquidation_analysis.html

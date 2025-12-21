@@ -1,0 +1,92 @@
+{
+    "paths": {
+        "data_dir": "data"
+    },
+    "files": {
+        "price_file": "MSCI_World_Indeces_1999_2025.xlsx",
+        "extra_info_file": "extra_info_world_indeces.xlsx"
+    },
+    "strategy_params": {
+		"start_date": "2000-01-03",
+		"end_date": "2025-08-31",
+        "calculation_currency": "USD",
+        "transaction_cost_pct": 0.001,
+        "capital_gains_tax_rate": 0.0,
+		"price_prefix" : "price_",    
+		"rebalance_tolerance_pct": 0.04,
+		"core_target_weight": 0.76,
+		"backtest_mode": "portfolio",
+		"pac_frequency": "BMS",
+		"rebalance_frequency": "QS",
+		"initial_capital": 10000,
+		"pac_value": 1000
+	
+    },
+	
+	"universe_definition": {
+        "benchmark_ticker": "WORLD",  
+        
+        "core_allocation": {
+            "VALUE": 0.25,      
+            "QUALITY": 0.25,
+            "MOMENTUM": 0.25,
+			"SIZE": 0.25
+        },        
+        "satellite_candidates": [
+            "VALUE", "QUALITY", "MOMENTUM", "SIZE"
+        ]
+    },
+    
+    "mappings": {
+        "excel_column_map": {
+            "MSCI World Index": "WORLD",
+            "MSCI World Enhanced Value Index": "VALUE",
+            "MSCI World Momentum Index": "MOMENTUM",
+            "MSCI World Sector Neutral Quality Index": "QUALITY",
+            "MSCI World Small Cap Index": "SIZE"
+        },
+        "sheet_names": {
+            "Price_to_Book": "Price_to_Book",
+            "Price_to_Earnings": "Price_to_Earnings",
+            "VOLA_90D": "VOLA_90D",
+            "VOLA_180D": "VOLA_180D"
+        }
+    },
+    "tickers": {
+        "cpi": "CPIAUCSL",
+		"risk_free_rate": "TB3MS"
+    },
+	
+	"signals":{
+		"signals_to_use": {
+			"pure_momentum":0.2,
+			"alpha": 0.4,
+			"valuation": 0.4
+			
+		},
+		
+		"lookbacks_and_weights": {
+			"3": 0.3333333333333333,
+			"6": 0.3333333333333333,
+			"12": 0.3333333333333334
+		},
+		
+		"valuation_metrics": {
+			"Price_to_Book": 0.5,
+			"Price_to_Earnings": 0.5
+		},
+		
+		"alpha_beta_window": 36,
+		"valuation_window": 36
+		
+	},
+    "cleaning": {
+        "winsorize_quantile": 0.995
+    },
+	
+	"reporting": {
+        "output_format": "file",
+        "output_path": "reports",
+        "plot_theme": "whitegrid"
+    }
+}

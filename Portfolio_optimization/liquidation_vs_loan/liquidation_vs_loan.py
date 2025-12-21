@@ -15,6 +15,7 @@ The analysis generates multiple interactive plots to explore the results:
 """
 
 import numpy as np
+import plotly.graph_objects as go
 import matplotlib.pyplot as plt
 import plotly.graph_objects as go
 import webbrowser
@@ -149,7 +150,15 @@ class Plotter:
     @staticmethod
     def _save_and_open(fig, filename: str):
         """Saves a Plotly figure to HTML and opens it."""
-        fig.write_html(filename)
+        
+        subfolder = "plots"
+        if not os.path.exists(subfolder):
+           os.makedirs(subfolder)
+           print(f"Cartella '{subfolder}' creata.")
+
+       # 3. Unisci la cartella al nome del file (es: plots/mio_file.html)
+        full_path = os.path.join(subfolder, filename)
+        fig.write_html(full_path, include_plotlyjs='cdn')
         print(f"\nInteractive plot saved as '{filename}'. Opening in your default browser...")
         try:
             webbrowser.open('file://' + os.path.realpath(filename))
