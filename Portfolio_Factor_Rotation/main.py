@@ -47,7 +47,7 @@ def run_pipeline():
     # ---------------------------------------------------------
     print("\n[3] Running Backtest Engines...")
     
-    # A. Active Strategy
+    
     print("    > Executing Active Strategy...")
     backtester_strat = Backtester(
         config=config_strat,
@@ -56,14 +56,13 @@ def run_pipeline():
     )
     ledger_strat, _ = backtester_strat.run()
     
-    # B. Benchmark (100% MSCI World)
+    
     print("    > Executing Benchmark (Passive MSCI World)...")
     config_bench = Config(config_path) 
-    # Align Benchmark params with Strategy
+    
     config_bench.strategy_params.update({
         'core_target_weight': 1.0, # 100% Core
     })
-    # Force Benchmark Allocation
     config_bench.universe['core_allocation'] = { 
         "VALUE": 0.0, "MOMENTUM": 0.0, "QUALITY": 0.0, "SIZE": 0.0, "WORLD": 1.0
     }

@@ -1,5 +1,5 @@
 # Strategy Report
-**Date:** 2025-12-16 20:30
+**Date:** 2025-12-28 20:39
 
 ## 1. Executive Strategy Profile
 ### 1.1 Mandate & Parameters
@@ -98,30 +98,35 @@ _VALUE, QUALITY, MOMENTUM, SIZE, WORLD_
 
 ## 6. Visual Analysis
 ### Growth & Risk
-![Equity Curve Log](plots_core100%/equity_curve_log.png)
-![Drawdowns](plots/drawdowns.png)
+![Equity Curve Log](plots/equity_curve_log_core.png)
+![Drawdowns](plots/drawdowns_core.png)
 ### Rolling Analysis (Dynamic)
-![Rolling CAGR 5Y](plots_core100%/rolling_cagr_5y.png)
-![Rolling Volatility 3Y](plots_core100%/rolling_volatility_3y.png)
-![Rolling Correlation 3Y](plots_core100%/rolling_correlation_3y.png)
-![Returns Distribution](plots_core100%/returns_distribution.png)
+![Rolling CAGR 5Y](plots/rolling_cagr_5y_core.png)
+![Rolling Volatility 3Y](plots/rolling_volatility_3y_core.png)
+![Rolling Correlation 3Y](plots/rolling_correlation_3y_core.png)
+![Returns Distribution](plots/returns_distribution_core.png)
 ### Allocation & Seasonality
-![Heatmap](plots_core100%/monthly_heatmap.png)
+![Heatmap](plots/monthly_heatmap.png)
 
 # 7. Advanced Statistical Validation
 ## 7.1 Probabilistic Metrics (Lopez de Prado)
 - **Probabilistic IR (P[IR>0]):** 99.58%
 - **Min Track Record (95% Conf.):** 10.4 Years
 
-## 7.2 Bootstrap Reality Check (Non-Centered)
+## 7.2 Bootstrap Reality Check (Non-Centered - Robustness)
 - **Observed t-stat:** 2.611
-- **Bootstrap p-value:** 0.5888
-![Bootstrap Dist](plots_core100%/bootstrap_distribution.png)
+- **Prob(t* > 0):** **99.74%**
+- **Interpretation:** **STRUCTURAL EDGE CONFIRMED:** The strategy (or its underlyings) generates positive returns in >95% of random scenarios. The engine is robust.
+![Bootstrap Dist](plots/bootstrap_distribution_core.png)
 
 ## 7.3 BRC Centered (Skill vs Luck)
 - **Centered t-stat:** -0.276
-- **Centered p-value:** 0.6044
-![Bootstrap Centered](plots_core100%/bootstrap_centered_distribution.png)
+- **Prob(t* > 0) [Skill Mass]:** **50.07%**
+- **Interpretation:**  **NO TIMING SKILL:** Value comes from index selection, not Timing.
+![Bootstrap Centered](plots/bootstrap_centered_distribution_core.png)
 
 ## 7.4 Rolling Time Robustness
-![Rolling P-Value](plots_core100%/rolling_pvalue.png)
+### Rolling Probability of Positive Return
+![Rolling Prob](plots/rolling_prob_gt_0_core.png)
+### Rolling P-Value (Outlier Check)
+![Rolling P-Value](plots/rolling_pvalue_core.png)

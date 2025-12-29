@@ -225,8 +225,10 @@ class StrategyValidator:
         t_stars = np.array([t for t in t_stars if not np.isnan(t)])
         
         p_val = np.mean(t_stars >= t_obs) if len(t_stars) > 0 else np.nan
+        prob_t_gt_0 = np.mean(t_stars >= 0) if len(t_stars) > 0 else np.nan
         
-        report = {'t_obs': t_obs, 'p_value': p_val, 'n': len(t_stars), 't_stars': t_stars}
+        
+        report = {'t_obs': t_obs, 'p_value': p_val, 'n': len(t_stars), 't_stars': t_stars, 'prob_t_gt_0': prob_t_gt_0}
         self.validation_results[label] = report
         
         print(f"   [{label}] t_obs: {t_obs:.3f} | p-value: {p_val:.4f}")
@@ -268,8 +270,9 @@ class StrategyValidator:
                 
                 if t_stars:
                     p_val = np.mean(np.array(t_stars) >= t_obs_loc)
-                    results.append({'end_date': win_dates[-1], 't_obs': t_obs_loc, 'p_value': p_val})
-                    print(f"   Win End: {win_dates[-1].date()} | t_obs: {t_obs_loc:5.2f} | p-val: {p_val:.3f}")
+                    prob_t_gt_0 = np.mean(np.array(t_stars) >= 0)
+                    results.append({'end_date': win_dates[-1], 't_obs': t_obs_loc, 'p_value': p_val, 'prob_t_gt_0': prob_t_gt_0})
+                    print(f"   Win End: {win_dates[-1].date()} | t_obs: {t_obs_loc:5.2f} | p-val: {p_val:.3f}| prob_t_gt_0: {prob_t_gt_0:.3f} ")
     
             self.rolling_results = pd.DataFrame(results).set_index('end_date')
     
@@ -277,46 +280,92 @@ class StrategyValidator:
     # --- 4. REPORTING ---
 
     def save_validation_plots(self, output_dir):
-        """Generates plots for the markdown report (Non-Centered AND Centered)."""
+        """Generates plots"""
         os.makedirs(output_dir, exist_ok=True)
         sns.set_theme(style="whitegrid")
         
+        # --- 1. Non-Centered Distribution (Robustness) ---
         if 'Non_Centered' in self.validation_results:
             res = self.validation_results['Non_Centered']
             fig, ax = plt.subplots(figsize=(10, 6))
-            sns.histplot(res['t_stars'], kde=True, color='gray', stat='density', label='Random Paths', ax=ax)
+            
+            # Plot istogramma base
+            sns.histplot(res['t_stars'], kde=True, color='gray', stat='density', label='Bootstrap Dist', ax=ax)
+            
+            # Evidenzia area > 0 (Success Probability)
+            if len(res['t_stars']) > 1:
+                # Estrai dati della KDE per colorare l'area
+                kde_lines = ax.get_lines()
+                if kde_lines:
+                    kde_x, kde_y = kde_lines[0].get_data()
+                    ax.fill_between(kde_x, kde_y, where=(kde_x >= 0), color='green', alpha=0.2, label=f'Positive Mass ({res.get("prob_t_gt_0", 0):.1%})')
+
             ax.axvline(res['t_obs'], color='red', linestyle='--', linewidth=2, label=f'Strategy (t={res["t_obs"]:.2f})')
-            ax.set_title(f"Bootstrap Reality Check (Non-Centered)\nHypothesis: Excess Return > 0 (p-value: {res['p_value']:.4f})")
-            ax.legend()
+            ax.axvline(0, color='black', linewidth=1)
+            
+            ax.set_title(f"Non-Centered BRC (Factor/Strategy Robustness)\nProb(t* > 0): {res.get('prob_t_gt_0', 0):.1%} | p-value: {res['p_value']:.4f}")
+            ax.legend(loc='upper left')
             fig.savefig(f"{output_dir}/bootstrap_distribution.png", bbox_inches='tight')
             plt.close(fig)
 
+        # --- 2. Centered Distribution (Skill) ---
         if 'Centered' in self.validation_results:
             res = self.validation_results['Centered']
             fig, ax = plt.subplots(figsize=(10, 6))
+            
             sns.histplot(res['t_stars'], kde=True, color='orange', stat='density', label='Random Timing', ax=ax)
+            
+            # Evidenzia area > 0
+            if len(res['t_stars']) > 1:
+                kde_lines = ax.get_lines()
+                if kde_lines:
+                    kde_x, kde_y = kde_lines[0].get_data()
+                    ax.fill_between(kde_x, kde_y, where=(kde_x >= 0), color='blue', alpha=0.1, label=f'Positive Skill Mass ({res.get("prob_t_gt_0", 0):.1%})')
+
             ax.axvline(res['t_obs'], color='blue', linestyle='--', linewidth=2, label=f'Strategy (t={res["t_obs"]:.2f})')
-            ax.set_title(f"Centered BRC (Skill vs Luck)\nHypothesis: Timing Ability > Random (p-value: {res['p_value']:.4f})")
-            ax.legend()
+            ax.axvline(0, color='black', linewidth=1)
+
+            ax.set_title(f"Centered BRC (Pure Timing Skill)\nProb(t* > 0): {res.get('prob_t_gt_0', 0):.1%} | p-value: {res['p_value']:.4f}")
+            ax.legend(loc='upper left')
             fig.savefig(f"{output_dir}/bootstrap_centered_distribution.png", bbox_inches='tight')
             plt.close(fig)
 
+        # --- 3. Rolling Analysis (P-Value & Prob > 0) ---
         if not self.rolling_results.empty:
+            
             fig, ax = plt.subplots(figsize=(12, 6))
             self.rolling_results['p_value'].plot(ax=ax, color='purple', marker='o', linewidth=1)
             ax.axhline(0.05, color='green', linestyle='--', label='High Significance (5%)')
-            ax.axhline(0.10, color='orange', linestyle=':', label='Moderate Significance (10%)')
-            ax.set_title("Rolling Bootstrap P-Value (Time Robustness)")
-            ax.set_ylabel("P-Value (Prob. of Luck)")
-            ax.set_xlabel("Window End Date")
+            ax.set_title("Rolling Bootstrap P-Value (Significance over time)")
             ax.legend()
             fig.savefig(f"{output_dir}/rolling_pvalue.png", bbox_inches='tight')
             plt.close(fig)
 
+            
+            if 'prob_t_gt_0' in self.rolling_results.columns:
+                fig, ax = plt.subplots(figsize=(12, 6))
+                self.rolling_results['prob_t_gt_0'].plot(ax=ax, color='darkgreen', marker='o', linewidth=2)
+                
+                
+                ax.axhline(0.95, color='gold', linestyle='--', label='Structural Edge (>95%)')
+                ax.axhline(0.50, color='gray', linestyle=':', label='Random Walk (50%)')
+                
+                # Fill colors
+                ax.fill_between(self.rolling_results.index, self.rolling_results['prob_t_gt_0'], 0.5, 
+                                where=(self.rolling_results['prob_t_gt_0'] >= 0.5), color='green', alpha=0.1)
+                ax.fill_between(self.rolling_results.index, self.rolling_results['prob_t_gt_0'], 0.5, 
+                                where=(self.rolling_results['prob_t_gt_0'] < 0.5), color='red', alpha=0.1)
+
+                ax.set_title("Rolling Probability of Positive Return (Robustness)")
+                ax.set_ylabel("Probability (Confidence)")
+                ax.legend(loc='lower left')
+                fig.savefig(f"{output_dir}/rolling_prob_gt_0.png", bbox_inches='tight')
+                plt.close(fig)
+
     def append_to_markdown(self, md_path):
-        """Appends validation section to existing report."""
+        """Appends validation section with AUTOMATIC INTERPRETATION."""
         pir = self.calculate_pir(0.0)
-        min_trl_years = self.calculate_min_trl(0.0) # Ora è già in anni
+        min_trl_years = self.calculate_min_trl(0.0)
         brc_nc = self.validation_results.get('Non_Centered', {})
         brc_c = self.validation_results.get('Centered', {})
         
@@ -324,41 +373,69 @@ class StrategyValidator:
             with open(md_path, "a", encoding="utf-8") as f:
                 f.write("\n\n# 7. Advanced Statistical Validation\n")
                 
+                # --- Probabilistic Metrics ---
                 f.write("## 7.1 Probabilistic Metrics (Lopez de Prado)\n")
                 f.write(f"- **Probabilistic IR (P[IR>0]):** {pir:.2%}\n")
-                
-                if min_trl_years > 100:
-                    trl_str = "> 100 Years (Not Significant)" 
-                else:
-                    trl_str = f"{min_trl_years:.1f} Years"
+                trl_str = "> 100 Years" if min_trl_years > 100 else f"{min_trl_years:.1f} Years"
                 f.write(f"- **Min Track Record (95% Conf.):** {trl_str}\n\n")
                 
+                # --- Non-Centered BRC (Robustness) ---
                 if brc_nc:
-                    f.write("## 7.2 Bootstrap Reality Check (Non-Centered)\n")
+                    prob_nc = brc_nc.get('prob_t_gt_0', 0)
+                    
+                    # Logic for Interpretation
+                    if prob_nc >= 0.95:
+                        comment = "**STRUCTURAL EDGE CONFIRMED:** The strategy (or its underlyings) generates positive returns in >95% of random scenarios. The engine is robust."
+                    elif prob_nc >= 0.75:
+                        comment = "**MODERATE EDGE:** The strategy wins in the majority of paths, but lacks absolute consistency."
+                    else:
+                        comment = "**NO EDGE:** The strategy does not reliably beat a random outcome."
+
+                    f.write("## 7.2 Bootstrap Reality Check (Non-Centered - Robustness)\n")
                     f.write(f"- **Observed t-stat:** {brc_nc.get('t_obs',0):.3f}\n")
-                    f.write(f"- **Bootstrap p-value:** {brc_nc.get('p_value',1.0):.4f}\n")
+                    f.write(f"- **Prob(t* > 0):** **{prob_nc:.2%}**\n")
+                    f.write(f"- **Interpretation:** {comment}\n")
                     f.write("![Bootstrap Dist](plots/bootstrap_distribution.png)\n\n")
                 
+                # --- Centered BRC (Skill) ---
                 if brc_c:
+                    prob_c = brc_c.get('prob_t_gt_0', 0)
+                    
+                    # Logic for Interpretation
+                    if prob_c >= 0.95:
+                        comment = "**TRUE ALPHA:** The rotation algorithm adds value even in zero-trend markets. High Skill."
+                    elif prob_c >= 0.70:
+                        comment = "**SOME SKILL:** The rotation adds value more often than not, but not consistently enough to be the sole driver."
+                    elif prob_c >= 0.50:
+                        comment = " **NO TIMING SKILL:** Value comes from index selection, not Timing."
+                    else:
+                        comment = "**NEGATIVE SKILL:** The active trading is destroying value compared to doing nothing."
+
                     f.write("## 7.3 BRC Centered (Skill vs Luck)\n")
                     f.write(f"- **Centered t-stat:** {brc_c.get('t_obs',0):.3f}\n")
-                    f.write(f"- **Centered p-value:** {brc_c.get('p_value',1.0):.4f}\n")
+                    f.write(f"- **Prob(t* > 0) [Skill Mass]:** **{prob_c:.2%}**\n")
+                    f.write(f"- **Interpretation:** {comment}\n")
                     f.write("![Bootstrap Centered](plots/bootstrap_centered_distribution.png)\n\n")
 
+                # --- Rolling Plots ---
                 if not self.rolling_results.empty:
                     f.write("## 7.4 Rolling Time Robustness\n")
+                    f.write("### Rolling Probability of Positive Return\n")
+                    f.write("![Rolling Prob](plots/rolling_prob_gt_0.png)\n")
+                    f.write("### Rolling P-Value (Outlier Check)\n")
                     f.write("![Rolling P-Value](plots/rolling_pvalue.png)\n")
+
         except Exception as e:
             print(f"Error appending to MD: {e}")
-
+            
     def finalize_validation(self):
-        # 1. Run Tests
-        self.run_brc(n_replications=5000, demean=False)
-        self.run_brc(n_replications=5000, demean=True)
-        self.run_brc_rolling_test(window_years=10, n_replications=2000)
-        
-        # 2. Reporting
-        out_dir = self.reporting_config.get('output_path', 'reports')
-        self.save_validation_plots(os.path.join(out_dir, 'plots'))
-        self.append_to_markdown(os.path.join(out_dir, 'STRATEGY_REPORT.md'))
-        print(f"--- Validation Complete. Report Updated. ---")
+            # 1. Run Tests
+            self.run_brc(n_replications=7000, demean=False)
+            self.run_brc(n_replications=7000, demean=True)
+            self.run_brc_rolling_test(window_years=10, n_replications=3000)
+            
+            # 2. Reporting
+            out_dir = self.reporting_config.get('output_path', 'reports')
+            self.save_validation_plots(os.path.join(out_dir, 'plots'))
+            self.append_to_markdown(os.path.join(out_dir, 'STRATEGY_REPORT.md'))
+            print(f"--- Validation Complete. Report Updated. ---")

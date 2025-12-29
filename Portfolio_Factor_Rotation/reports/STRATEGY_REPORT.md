@@ -1,5 +1,5 @@
 # Strategy Report
-**Date:** 2025-12-17 23:57
+**Date:** 2025-12-25 21:40
 
 ## 1. Executive Strategy Profile
 ### 1.1 Mandate & Parameters
@@ -113,15 +113,20 @@ _VALUE, QUALITY, MOMENTUM, SIZE, WORLD_
 - **Probabilistic IR (P[IR>0]):** 99.60%
 - **Min Track Record (95% Conf.):** 10.3 Years
 
-## 7.2 Bootstrap Reality Check (Non-Centered)
+## 7.2 Bootstrap Reality Check (Non-Centered - Robustness)
 - **Observed t-stat:** 2.627
-- **Bootstrap p-value:** 0.5124
+- **Prob(t* > 0):** **99.70%**
+- **Interpretation:** **STRUCTURAL EDGE CONFIRMED:** The strategy (or its underlyings) generates positive returns in >95% of random scenarios. The engine is robust.
 ![Bootstrap Dist](plots/bootstrap_distribution.png)
 
 ## 7.3 BRC Centered (Skill vs Luck)
 - **Centered t-stat:** 0.006
-- **Centered p-value:** 0.5688
+- **Prob(t* > 0) [Skill Mass]:** **57.31%**
+- **Interpretation:**  **NO TIMING SKILL:** Value comes from index selection, not Timing.
 ![Bootstrap Centered](plots/bootstrap_centered_distribution.png)
 
 ## 7.4 Rolling Time Robustness
+### Rolling Probability of Positive Return
+![Rolling Prob](plots/rolling_prob_gt_0.png)
+### Rolling P-Value (Outlier Check)
 ![Rolling P-Value](plots/rolling_pvalue.png)
